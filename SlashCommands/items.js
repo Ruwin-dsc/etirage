@@ -98,7 +98,7 @@ module.exports = {
                 .setFooter({ text: config.footerText })
                 return interaction.reply({ embeds: [embed] })
             }
-            if(coins && !api_key || rep && !api_key) {
+            if(coins && !api_key || rep && !api_key || rep && !req.apikey || coins && !req.apikey) {
                 const embed = new Discord.EmbedBuilder()
                 .setColor(data.color)
                 .setTitle(`Pas de clef d'api précisée !`)
@@ -113,13 +113,14 @@ module.exports = {
                 "coins": coins,
                 "rep": rep,
                 "jetons": jetons,
-                "pourcentage": rarity
+                "pourcentage": rarity,
+                "number": 0
             }
 
-            const newJson = await adjuste(array, json, role ? role.id : null, coins, rep, jetons, rarity)
+            const newJson = await adjuste(array, json)
 
             bot.db.prepare(`UPDATE guild SET items = @coins WHERE id = @id`).run({ coins: JSON.stringify(newJson), id: interaction.guild.id });
-            if(api_key) bot.db.prepare(`UPDATE guild SET apikey = @coins WHERE id = @id`).run({ coins: JSON.stringify(api_key), id: interaction.guild.id });
+            if(api_key) bot.db.prepare(`UPDATE guild SET apikey = @coins WHERE id = @id`).run({ coins: api_key, id: interaction.guild.id });
 
             const embed = new Discord.EmbedBuilder()
             .setColor(data.color)
@@ -135,9 +136,9 @@ module.exports = {
             .setColor(data.color)
             .setTitle(`Liste des récompenses`)
             .setFooter({ text: config.footerText })
-            .setDescription(`- L'embed de jeu est modifié chaque minute\n- *Clef d'API CoinsBot (pour l'ajout auto des coins/rep): ${req.api_key || "Non défini"}*`)
+            .setDescription(`- L'embed de jeu est modifié chaque minute\n- *Clef d'API CoinsBot (pour l'ajout auto des coins/rep): ${req.apikey || "Non défini"}*`)
 
-            array.forEach(c => embed.addFields({ name: `**・ f | \`${c.pourcentage}%\` (rareté: \`${c.rarity}/100\`)**`, value: `┖ ${!c.coins && !c.role && !c.rep && !c.jetons ? "Pas de récompense automatique configurée" : `${c.role ? `(<@&${c.role}>) ` : ""}${c.coins ? `(\`${c.coins} coins\`) ` : ""}${c.rep ? `(\`${c.rep} rep\`) ` : ""}${c.jetons ? `(\`${c.jetons} jetons\`)` : ""} `}`}))
+            array.forEach(c => embed.addFields({ name: `**・ ${c.name} | \`${c.rarity}%\` (rareté: \`${c.pourcentage}/100\`)**`, value: `┖ ${!c.coins && !c.role && !c.rep && !c.jetons ? "Pas de récompense automatique configurée" : `${c.role ? `(<@&${c.role}>) ` : ""}${c.coins ? `(\`${c.coins} coins\`) ` : ""}${c.rep ? `(\`${c.rep} rep\`) ` : ""}${c.jetons ? `(\`${c.jetons} jetons\`)` : ""} `}`}))
             interaction.reply({ embeds: [embed]})
         } else if(interaction.options.getSubcommand() == "remove") {
             const name = interaction.options.getString('name')
@@ -154,7 +155,7 @@ module.exports = {
     }
 }
 
-function adjuste(db, valeur, role, coins, rep, jetons, pourcentage) {
+function adjuste(db, valeur) {
     const total = db.reduce((acc, obj) => acc + obj.rarity, 0);
     db.push(valeur);
 
@@ -162,21 +163,23 @@ function adjuste(db, valeur, role, coins, rep, jetons, pourcentage) {
     let array = db.map(obj => ({
         "name": obj.name,
         "rarity": (obj.rarity / newTotal) * 100,
-        "role": role,
-        "coins": coins,
-        "rep": rep,
-        "jetons": jetons,
-        "pourcentage": pourcentage
+        "role": obj.role,
+        "coins": obj.coins,
+        "rep": obj.rep,
+        "jetons": obj.jetons,
+        "pourcentage": obj.pourcentage,
+        "number": obj.number || 0
     }));
 
     array = array.map(obj => ({
         "name": obj.name,
         "rarity": Math.round(obj.rarity * 100) / 100,
-        "role": role,
-        "coins": coins,
-        "rep": rep,
-        "jetons": jetons,
-        "pourcentage": pourcentage
+        "role": obj.role,
+        "coins": obj.coins,
+        "rep": obj.rep,
+        "jetons": obj.jetons,
+        "pourcentage": obj.pourcentage,
+        "number": obj.number || 0
     }));
 
     let sum = array.reduce((acc, obj) => acc + obj.rarity, 0);

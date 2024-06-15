@@ -10,7 +10,8 @@ module.exports = () => {
     )`);
     db.exec(`CREATE TABLE IF NOT EXISTS user (
         id TEXT DEFAULT NULL,
-        jetons TEXT DEFAULT '0'
+        jetons TEXT DEFAULT '0',
+        timeInVoc TEXT DEFAULT '7200000'
     )`);
 
     db.exec(`CREATE TABLE IF NOT EXISTS guild (
@@ -18,8 +19,9 @@ module.exports = () => {
         apikey TEXT DEFAULT NULL, 
         items TEXT DEFAULT '[]',
         color TEXT DEFAULT 'Red',
-        duration TEXT DEFAULT '2h',
-        logs TEXT DEFAULT NULL
+        duration TEXT DEFAULT '7200000',
+        logs TEXT DEFAULT NULL,
+        msg TEXT DEFAULT NULL
     )`);
     return db;
 }

@@ -27,12 +27,12 @@ function checkuser(bot, userId) {
 
 function addjetons(bot, userId, number) {
     let req = checkuser(bot, userId)
-    bot.db.prepare(`UPDATE user SET jetons = @coins WHERE id = @id`).run({ coins: req.jetons + number, id: userId });
+    bot.db.prepare(`UPDATE user SET jetons = @coins WHERE id = @id`).run({ coins: Number(req.jetons) + Number(number), id: userId });
 }
 
 function removejetons(bot, userId, number) {
     let req = checkuser(bot, userId)
-    bot.db.prepare(`UPDATE user SET jetons = @coins WHERE id = @id`).run({ coins: req.jetons - number, id: userId });
+    bot.db.prepare(`UPDATE user SET jetons = @coins WHERE id = @id`).run({ coins: Number(req.jetons) - number, id: userId });
 }
 module.exports = {
     checkBot: checkbot,

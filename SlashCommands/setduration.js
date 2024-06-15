@@ -15,8 +15,8 @@ module.exports = {
         }
     ],
     run: async (bot, interaction, args, config, data) => {
-        const dure = interaction.options.getString('time')
-        if(!parseHuman(dure)) {
+        const dure = parseHuman(interaction.options.getString('time'))
+        if(!dure) {
             const embed = new Discord.EmbedBuilder()
             .setColor(data.color)
             .setTitle(`Paramètre invalide !`)
@@ -28,10 +28,11 @@ module.exports = {
             const embed = new Discord.EmbedBuilder()
             .setColor(data.color)
             .setTitle(`La durée a bien été modifiée !`)
-            .setDescription(`Les membres gagneront un jeton chaque ${parseMS(dure).replace('days', 'jours').replace('and', '').replace('hours', 'heures')} de vocal !`)
+            .setDescription(`Les membres gagneront un jeton chaque ${parseMS(dure).replace('hour', 'heure').replace('second', 'seconde').replace('days', 'jours').replace('and', '').replace('hours', 'heures').replace('seconds', 'secondes')} de vocal !`)
             .setFooter({ text: config.footerText })
 
             bot.db.prepare(`UPDATE guild SET duration = @coins WHERE id = @id`).run({ coins: dure, id: interaction.guild.id });
+            bot.db.prepare(`UPDATE user SET timeInVoc = @coins WHERE id = @id`).run({ coins: dure, id: interaction.user.id });
 
             interaction.reply({ embeds: [embed]})
         }
