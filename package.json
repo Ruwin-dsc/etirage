@@ -1,0 +1,10 @@
+{
+  "name": "etirage",
+  "author": "ruwinou",
+  "dependencies": {
+    "better-sqlite3": "^11.0.0",
+    "discord.js": "^14.15.2",
+    "fs": "^0.0.1-security",
+    "human-ms": "^0.0.2"
+  }
+}
