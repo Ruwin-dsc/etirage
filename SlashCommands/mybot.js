@@ -4,6 +4,7 @@ module.exports = {
     name: 'mybot',
     description: 'Envoie la liste de vos bots.',
     dm_permission: false,
+    perm: 'BUYER',
     run: async (bot, interaction, args, config, data) => {
         const embed = new Discord.EmbedBuilder()
         .setColor(data.color)

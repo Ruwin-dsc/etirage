@@ -14,8 +14,19 @@ module.exports = {
               });
           } else if (option.value) args.push(option.value);
       }
-      if(interaction.user.id !== "820361590826205215") return
       const guild = bot.functions.checkGuild(bot, interaction.guild.id)
-      cmd.run(bot, interaction, args, config, guild);
+      if(permOrNON(bot, interaction, guild, cmd, config) == true) cmd.run(bot, interaction, args, config, guild);
   }
   }}
+
+  function permOrNON(bot, message, guild, commandFile, config) {
+    if(commandFile.perm == "OWNER") {
+      const owners = JSON.parse(guild.owners)
+      if(owners.includes(message.user.id)) return true
+      else if(config.buyers.includes(message.user.id)) return true
+      else return message.reply("`❌` Vous devez être `owner` pour utiliser cette commande !")
+    } else if(commandFile.perm == "BUYER") {
+    if(config.buyers.includes(message.user.id)) return true
+      else return message.reply("`❌` Vous devez être `buyer` pour utiliser cette commande !")
+    } else return true
+  }
