@@ -19,7 +19,7 @@ module.exports = {
             const guild = bot.functions.checkGuild(bot, interaction.guild.id)
             const dure = guild.duration
             const jetons = bot.functions.checkUser(bot, interaction.user.id).jetons
-            if(jetons == 0) return interaction.reply({ content: `:x: Vous devez avoir au moins 1 jeton pour lancer la roue !\n:information_source: *Vous gagnez 1 jeton chaque ${parseMS(dure).replace('days', 'jours').replace('and', '').replace('hour', 'heure').replace('second', 'seconde').replace('hours', 'heures').replace('seconds', 'secondes')} passées en vocal sur ${interaction.guild.name}*`})
+            if(jetons == 0) return interaction.reply({ content: `:x: Vous devez avoir au moins 1 jeton pour lancer la roue !\n:information_source: *Vous gagnez 1 jeton chaque ${parseMS(dure).replace('days', 'jours').replace('and', '').replace('hour', 'heure').replace('second', 'seconde').replace('hours', 'heures').replace('seconds', 'secondes')} passées en vocal sur ${interaction.guild.name}*`, ephemeral: true })
             else {
                 let array = JSON.parse(guild.items)
                 bot.functions.removeJetons(bot, interaction.user.id, 1)

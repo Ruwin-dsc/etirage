@@ -6,7 +6,7 @@ module.exports = () => {
     db.exec(`CREATE TABLE IF NOT EXISTS bot (
         id TEXT DEFAULT NULL,
         activity TEXT DEFAULT '{"name": "By ruwinou", "type": "5", "status": "online" }',
-        owners TEXT DEFAULT '${config.buyers.map(u => `"${u}"`).join(', ')}'
+        owners TEXT DEFAULT '[]'
     )`);
     db.exec(`CREATE TABLE IF NOT EXISTS user (
         id TEXT DEFAULT NULL,

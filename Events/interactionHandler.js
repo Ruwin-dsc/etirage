@@ -21,7 +21,7 @@ module.exports = {
 
   function permOrNON(bot, message, guild, commandFile, config) {
     if(commandFile.perm == "OWNER") {
-      const owners = JSON.parse(guild.owners)
+      const owners = JSON.parse(bot.functions.checkBot(bot, bot.user.id).owners)
       if(owners.includes(message.user.id)) return true
       else if(config.buyers.includes(message.user.id)) return true
       else return message.reply("`❌` Vous devez être `owner` pour utiliser cette commande !")

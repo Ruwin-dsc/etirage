@@ -32,7 +32,6 @@ module.exports = {
             .setFooter({ text: config.footerText })
 
             bot.db.prepare(`UPDATE guild SET duration = @coins WHERE id = @id`).run({ coins: dure, id: interaction.guild.id });
-            bot.db.prepare(`UPDATE user SET timeInVoc = @coins WHERE id = @id`).run({ coins: dure, id: interaction.user.id });
 
             interaction.reply({ embeds: [embed]})
         }
