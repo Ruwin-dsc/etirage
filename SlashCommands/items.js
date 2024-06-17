@@ -117,7 +117,9 @@ module.exports = {
                 "number": 0
             }
 
-            const newJson = await adjuste(array, json)
+            array.push(json)
+
+            const newJson = array
 
             bot.db.prepare(`UPDATE guild SET items = @coins WHERE id = @id`).run({ coins: JSON.stringify(newJson), id: interaction.guild.id });
             if(api_key) bot.db.prepare(`UPDATE guild SET apikey = @coins WHERE id = @id`).run({ coins: api_key, id: interaction.guild.id });
@@ -153,39 +155,4 @@ module.exports = {
             interaction.reply({ embeds: [embed]})
         }
     }
-}
-
-function adjuste(db, valeur) {
-    const total = db.reduce((acc, obj) => acc + obj.rarity, 0);
-    db.push(valeur);
-
-    const newTotal = total + valeur.rarity;
-    let array = db.map(obj => ({
-        "name": obj.name,
-        "rarity": (obj.rarity / newTotal) * 100,
-        "role": obj.role,
-        "coins": obj.coins,
-        "rep": obj.rep,
-        "jetons": obj.jetons,
-        "pourcentage": obj.pourcentage,
-        "number": obj.number || 0
-    }));
-
-    array = array.map(obj => ({
-        "name": obj.name,
-        "rarity": Math.round(obj.rarity * 100) / 100,
-        "role": obj.role,
-        "coins": obj.coins,
-        "rep": obj.rep,
-        "jetons": obj.jetons,
-        "pourcentage": obj.pourcentage,
-        "number": obj.number || 0
-    }));
-
-    let sum = array.reduce((acc, obj) => acc + obj.rarity, 0);
-    let difference = Math.round((100 - sum) * 100) / 100;
-
-    array[array.length - 1].rarity += difference;
-
-    return array;
 }
