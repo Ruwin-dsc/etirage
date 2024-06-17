@@ -1,5 +1,5 @@
 const Database = require('better-sqlite3');
-const db = new Database('./Utils/DataBase/database.db');
+const db = new Database('./Utils/Database/database.db');
 const config = require('../config.js')
 
 module.exports = () => {
