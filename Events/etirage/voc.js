@@ -11,6 +11,7 @@ module.exports = {
                         bot.db.prepare(`UPDATE user SET timeInVoc = @coins WHERE id = @id`).run({ coins: Number(dure) - 60000, id: u.id });
                         if(dure < 0) {
                             bot.functions.addJetons(bot, u.id, 1)
+                            bot.db.prepare(`UPDATE user SET timeInVoc = @coins WHERE id = @id`).run({ coins: Number(dure), id: u.id });
                         }
                     }
                 })
